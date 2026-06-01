@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Organization</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Page styles -->
+  <style>
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+    }
+
+    body {
+      scroll-padding-top: 6rem;
+    }
+
+    .page {
+      position: relative;
+      isolation: isolate;
+      min-height: calc(100vh - 8rem);
+      scroll-snap-align: start;
+      scroll-margin-top: 6rem;
+      opacity: 1;
+      transform: translateY(24px) scale(0.98);
+      transition:
+      opacity 0.8s ease,
+        transform 0.8s ease,
+        filter 0.8s ease;
+      filter: none;
+      padding: 4rem 1rem;
+      overflow: hidden;
+      border-radius: 1rem;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(
+        rgba(255, 255, 255, 0.28),
+        rgba(255, 255, 255, 0.28)
+      );
+    }
+
+    .page > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .page.active {
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+
+    .nav-btn {
+      padding: 0.4rem 0.7rem;
+      border-radius: 999px;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .nav-btn.active {
+      background: #d97706;
+      color: white;
+    }
+
+    .page.route-leaving {
+      opacity: 0;
+      transform: translateY(-18px) scale(0.98);
+    }
+
+    .page.route-entering {
+      opacity: 0;
+      transform: translateY(18px) scale(0.98);
+    }
+
+    html[dir="rtl"] body {
+      text-align: right;
+    }
+
+    html[dir="rtl"] .text-center {
+      text-align: center;
+    }
+
+    html[dir="rtl"] .text-left {
+      text-align: right;
+    }
+
+    html[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]),
+    html[dir="rtl"] .space-x-6 > :not([hidden]) ~ :not([hidden]) {
+      --tw-space-x-reverse: 1;
+    }
+
+    @keyframes scroll {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+  </style>
+</head>
+
+<body class="bg-white text-gray-800">
+
+<!-- HEADER -->
+<header class="fixed top-0 left-0 w-full bg-white shadow z-50">
+  <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+
+    <div class="flex items-center">
+      <img id="siteLogo" alt="Logo" class="hidden h-12 max-w-40 object-contain">
+      <span id="siteLogoText" class="font-bold text-lg">LOGO</span>
+    </div>
+
+    <nav class="hidden md:flex items-center space-x-6">
+      <button class="nav-btn" data-page="hero" data-i18n="nav.home">Home</button>
+      <button class="nav-btn" data-page="kvitel" data-i18n="nav.kvitel">Kvitel</button>
+      <button class="nav-btn" data-page="pushka" data-i18n="nav.pushka">Pushka</button>
+      <button class="nav-btn" data-page="contact" data-i18n="nav.contact">Contact</button>
+
+      <!-- Donate Highlight -->
+      <button data-page="donate"
+        class="nav-btn bg-amber-600 text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-amber-700 transition"
+        data-i18n="nav.donate">
+        Donate
+      </button>
+
+      <button id="languageToggle" class="border px-3 py-2 rounded-full font-semibold" type="button">
+        עברית
+      </button>
+    </nav>
+
+  </div>
+</header>
+
+<!-- spacing for fixed header -->
+<div class="h-20"></div>
+
+<!-- TICKER -->
+<div class="bg-gray-100 overflow-hidden whitespace-nowrap py-2 text-sm">
+  <div class="animate-[scroll_15s_linear_infinite] inline-block">
+    <span data-i18n="ticker">Send your Kvitel</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="max-w-5xl mx-auto px-4 py-10 space-y-10">
+
+  <!-- HERO -->
+  <section id="hero" class="page active text-center">
+    <h1 class="text-4xl font-bold mb-4" data-i18n="hero.title">Send Your Kvitel</h1>
+
+    <div class="space-x-4">
+      <button data-page="kvitel"
+        class="bg-amber-600 text-white px-6 py-3 rounded-full"
+        data-i18n="hero.start">
+        Send Kvitel
+      </button>
+
+      <button data-page="donate"
+        class="border px-6 py-3 rounded-full"
+        data-i18n="nav.donate">
+        Donate
+      </button>
+    </div>
+  </section>
+
+  <!-- KVITEL -->
+  <section id="kvitel" class="page text-center">
+    <h2 class="text-3xl font-bold mb-4" data-i18n="kvitel.title">Send a Kvitel</h2>
+
+    <form id="kvitelForm" class="max-w-md mx-auto space-y-4">
+
+      <!-- Kvitel -->
+      <textarea
+        name="text"
+        class="w-full border p-3 rounded"
+        placeholder="Write your kvitel..."
+        data-i18n-placeholder="kvitel.textPlaceholder"
+      ></textarea>
+
+      <!-- Name -->
+      <input
+        type="text"
+        name="name"
+        class="w-full border p-3 rounded"
+        placeholder="Name (optional)"
+        data-i18n-placeholder="common.nameOptional"
+      >
+
+      <!-- Email -->
+      <input
+        type="email"
+        name="email"
+        class="w-full border p-3 rounded"
+        placeholder="Email (optional)"
+        data-i18n-placeholder="common.emailOptional"
+      >
+
+      <!-- Pidyon (Donation) -->
+      <div class="text-left">
+        <button
+          type="button"
+          id="pidyonToggle"
+          class="border px-4 py-2 rounded w-full"
+          data-i18n="kvitel.addPidyon">
+          Add Pidyon
+        </button>
+
+        <p id="pidyonNote" class="text-sm text-gray-500 mt-2 hidden" data-i18n="kvitel.pidyonNote">
+          You will be redirected to payment after submitting
+        </p>
+      </div>
+
+      <button type="submit"
+        class="bg-amber-600 text-white w-full py-3 rounded-full"
+        data-i18n="common.submit">
+        Submit
+      </button>
+
+    </form>
+  </section>
+
+  <!-- DONATE -->
+  <section id="donate" class="page text-center">
+    <h2 id="donateTitle" class="text-3xl font-bold mb-4" data-i18n="donate.title">
+      Donate
+    </h2>
+
+    <div class="space-x-4">
+      <button class="border px-4 py-2 rounded">₪18</button>
+      <button class="border px-4 py-2 rounded">₪36</button>
+      <button class="border px-4 py-2 rounded">₪100</button>
+    </div>
+  </section>
+
+  <!-- PUSHKA -->
+  <section id="pushka" class="page text-center">
+
+    <h6 class="text-3xl font-bold mb-8" data-i18n="pushka.title">Pushka Services</h6>
+
+    <!-- MAIN OPTIONS -->
+    <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+
+      <!-- EMPTY PUSHKA -->
+
+        <button id="emptyPushkaBtn"
+          class="w-full bg-amber-600 text-white py-3 rounded-full mb-3"
+          data-i18n="pushka.empty">
+          Empty My Pushka
+        </button>
+      
+
+      <!-- REQUEST PUSHKA -->
+
+        <button id="requestPushkaBtn"
+          class="w-full border py-3 rounded-full bg-white"
+          data-i18n="pushka.request">
+          Request a Pushka
+        </button>
+      
+
+    </div>
+
+    <!-- EMPTY OPTIONS -->
+    <div id="emptyOptions" class="hidden mt-10 max-w-md mx-auto space-y-4">
+
+      <h3 class="font-semibold text-lg" data-i18n="pushka.emptyQuestion">How would you like to empty it?</h3>
+
+      <button id="payNowBtn"
+        class="w-full bg-green-500 text-white py-3 rounded-full"
+        data-i18n="pushka.payNow">
+        Pay Now (Card)
+      </button>
+
+      <button id="gabaiBtn"
+        class="w-full border py-3 rounded-full bg-white"
+        data-i18n="pushka.pickup">
+        Request Gabai Pickup
+      </button>
+
+    </div>
+
+    <!-- GABAI FORM -->
+    <form id="gabaiForm"
+      class="hidden mt-8 max-w-md mx-auto space-y-4">
+
+      <input name="city" placeholder="City" data-i18n-placeholder="common.city"
+        class="w-full border p-3 rounded" required>
+
+      <input name="phone" placeholder="Phone Number" data-i18n-placeholder="common.phone"
+        class="w-full border p-3 rounded" required>
+
+      <input name="address" placeholder="Address" data-i18n-placeholder="common.address"
+        class="w-full border p-3 rounded" required>
+
+      <button class="bg-amber-600 text-white w-full py-3 rounded-full" data-i18n="pushka.submitPickup">
+        Submit Pickup Request
+      </button>
+
+    </form>
+
+    <!-- REQUEST PUSHKA FORM -->
+    <form id="requestPushkaForm"
+      class="hidden mt-8 max-w-md mx-auto space-y-4">
+
+      <input name="name" placeholder="Your Name" data-i18n-placeholder="common.yourName"
+        class="w-full border p-3 rounded" required>
+
+      <input name="address" placeholder="Address" data-i18n-placeholder="common.address"
+        class="w-full border p-3 rounded" required>
+
+      <button class="bg-amber-600 text-white w-full py-3 rounded-full" data-i18n="pushka.submitRequest">
+        Submit Request
+      </button>
+
+    </form>
+
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="page text-center">
+    <h2 class="text-3xl font-bold mb-4" data-i18n="contact.title">Contact Gabai</h2>
+
+    <p class="text-gray-600" data-i18n="contact.subtitle">We are here to help you</p>
+  </section>
+
+</main>
+
+<!-- FLOATING CONTACT -->
+<div class="fixed bottom-6 right-6">
+
+  <button id="contactToggle"
+    class="bg-green-500 text-white w-14 h-14 rounded-full shadow-lg text-xl">
+    ?
+  </button>
+
+  <div id="contactBox"
+    class="hidden mt-3 bg-white shadow-xl rounded-xl p-4 w-48 text-left">
+
+    <p class="mb-2 cursor-pointer" data-i18n="contact.phone">Phone</p>
+    <p class="cursor-pointer" data-i18n="contact.email">Email</p>
+
+  </div>
+</div>
+
+<!-- MAIN SCRIPT -->
+<script type="module" src="./js/app.js"></script>
+
+</body>
+</html>
